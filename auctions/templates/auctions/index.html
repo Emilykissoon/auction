@@ -1,0 +1,35 @@
+{% extends "auctions/layout.html" %}
+{% load static %}
+
+{% block body %}
+    <h2>Active Listings</h2>
+    {% if empty == True %}
+        <br>
+        <h5>No active listings</h5>
+    {% else %}
+        <ul>
+        {% for list in listings %}
+            <div style="margin:10px" class="clearfix">
+                {% if list.img == '' or list.img == None %}
+                    <img class="float-left pull-left mr-2" width="40%" src="{% static 'auctions/no-image.png' %}"
+                         alt="Card image cap">
+                {% else %}
+                    <img class="float-left pull-left mr-2" width="40%" src="{{ list.img }}" alt="Card image cap">
+                {% endif %}
+                <h2 class="card-title">{{ list.title }} -
+                    {% for bid in bids %}
+                        {% if bid.listing == list %}
+                            ${{ bid.bid|floatformat:2 }}
+                        {% endif %}
+                    {% endfor %}
+                </h2>
+                <p class="card-text">{{ list.description }}</p>
+                <form method="post">
+                    {% csrf_token %}
+                    <a class="btn btn-primary" href={{ list.id }}>View</a>
+                </form>
+            </div>
+        {% endfor %}
+    {% endif %}
+</ul>
+{% endblock %}
